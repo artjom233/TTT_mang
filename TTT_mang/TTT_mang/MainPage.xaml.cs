@@ -12,7 +12,7 @@ namespace TTT_mang
     {
         Grid grid4x1, grid3x3;
         Button uus_mang, esimene, teema;
-        BoxView b;
+       // BoxView b;
         Image cross, round, ime;
         Random rnd;
         Color color;
@@ -75,11 +75,11 @@ namespace TTT_mang
         //02 11 20
         public int Kontroll()
         {
-            if(T[0,0]==1 && T[1,0]==1 && T[2,0]==1 || T[0, 1] == 1 && T[1, 1] == 1 && T[2, 1] == 1 || T[0, 2] == 1 && T[1, 2] == 1 && T[2, 2] == 1)
+            if (T[0,0]==1 && T[1,0]==1 && T[2,0]==1 || T[0, 1] == 1 && T[1, 1] == 1 && T[2, 1] == 1 || T[0, 2] == 1 && T[1, 2] == 1 && T[2, 2] == 1)
             {
                 voit = 1;
             }
-            else if(T[0, 0] == 1 && T[0, 1] == 1 && T[0, 2] == 1 || T[1, 0] == 1 && T[1, 1] == 1 && T[1, 2] == 1 || T[20, 0] == 1 && T[2, 1] == 1 && T[2, 2] == 1)
+            else if (T[0, 0] == 1 && T[0, 1] == 1 && T[0, 2] == 1 || T[1, 0] == 1 && T[1, 1] == 1 && T[1, 2] == 1 || T[2, 0] == 1 && T[2, 1] == 1 && T[2, 2] == 1)
             {
                 voit = 1;
             }
@@ -87,17 +87,21 @@ namespace TTT_mang
             {
                 voit = 1;
             }
-            if (T[0, 0] == 2 && T[1, 0] == 2 && T[2, 0] == 2 || T[0, 1] == 2 && T[1, 1] == 2 && T[2, 1] == 2 || T[0, 2] == 2 && T[1, 2] == 2 && T[2, 2] == 2)
+            else if (T[0, 0] == 2 && T[1, 0] == 2 && T[2, 0] == 2 || T[0, 1] == 2 && T[1, 1] == 2 && T[2, 1] == 2 || T[0, 2] == 2 && T[1, 2] == 2 && T[2, 2] == 2)
             {
                 voit = 2;
             }
-            else if (T[0, 0] == 2 && T[0, 1] == 2 && T[0, 2] == 2 || T[1, 0] == 2 && T[1, 1] == 2 && T[1, 2] == 2 || T[20, 0] == 2 && T[2, 1] == 2 && T[2, 2] == 2)
+            else if (T[0, 0] == 2 && T[0, 1] == 2 && T[0, 2] == 2 || T[1, 0] == 2 && T[1, 1] == 2 && T[1, 2] == 2 || T[2, 0] == 2 && T[2, 1] == 2 && T[2, 2] == 2)
             {
                 voit = 2;
             }
             else if (T[0, 0] == 2 && T[1, 1] == 2 && T[2, 2] == 2 || T[0, 2] == 2 && T[1, 1] == 2 && T[2, 0] == 2)
             {
                 voit = 2;
+            }
+            else if (T[0,0] != 0 && T[0, 1] != 0 && T[0, 2] != 0 && T[1, 0] != 0 && T[1, 2] != 0 && T[1, 1] != 0 && T[2, 0] != 0 && T[2, 1] != 0 && T[2, 2] != 0)
+            {
+                voit = 3;
             }
             return voit;
         }
@@ -113,16 +117,18 @@ namespace TTT_mang
             {
                 DisplayAlert("Victory", "N2", "OK");
             }
-          //  else if (voit==0)
-          //  {
-            //    DisplayAlert("None", "None", "OK");
-           // }
+            else if (voit==3)
+            {
+                DisplayAlert("None", "None", "OK");
+            }
         }
-        
 
+        int r = 0, g = 0, b = 0;
         private void Teema_Clicked(object sender, EventArgs e)
         {
-            b = new BoxView { };
+            rnd = new Random();
+            grid3x3.BackgroundColor = Color.FromRgb(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+
         }
 
         private async void Esimene_Clicked(object sender, EventArgs e)
@@ -174,13 +180,15 @@ namespace TTT_mang
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    b = new BoxView { Color = Color.Black };
-                    cross = new Image { Source = "cross.png" };
-                    round = new Image { Source = "round.png" };
-                    grid3x3.Children.Add(b, j, i);
+                  //  b = new BoxView { Color = Color.Black };
+                   ime = new Image { Source = "B.jpg" };
+                    //round = new Image { Source = "round.png" };
+                    grid3x3.Children.Add(ime, j, i);
                     TapGestureRecognizer tap = new TapGestureRecognizer();
                     tap.Tapped += Tap_Tapped;
-                    b.GestureRecognizers.Add(tap);
+                    ime.GestureRecognizers.Add(tap);
+                    T[j, i] = 0;
+                    voit = 0;
                 }
             }
             grid4x1.Children.Add(grid3x3, 0, 0);
@@ -188,18 +196,21 @@ namespace TTT_mang
 
         private void Tap_Tapped(object sender, EventArgs e)
         {
-            var ime = (Image)sender;
-            var r = Grid.GetRow(b);
-            var c = Grid.GetRow(b);
+             var ime = (Image)sender;
+            //var b = (BoxView)sender;
+            var r = Grid.GetRow(ime);
+            var c = Grid.GetColumn(ime);
             if (esi)
             {
-                ime.Source = "cross.png";
-                    esi = false;
+                 ime.Source = "cross.png";
+               // b.Color = Color.Red;
+                esi = false;
                 T[r, c] = 1;
             }
             else
             {
-                ime.Source = "round.png";
+                  ime.Source = "round.png";
+               // b.Color = Color.Yellow;
                 esi = true;
                 T[r, c] = 2;
             }
